@@ -49,6 +49,10 @@ class AgriVibeClient:
         """Sends one message to the orchestrator. None starts a new conversation."""
         return read(ChatReply, self._call("POST", "/chat", json={"message": message, "thread_id": thread_id}))
 
+    def feedback(self, trace_id: str, positive: bool) -> None:
+        """Sends the farmer's 👍/👎 on one reply. The backend stores it as a Langfuse score."""
+        self._call("POST", "/feedback", json={"trace_id": trace_id, "positive": positive})
+
     def list_threads(self) -> list[ThreadSummary]:
         """The farmer's conversations, the most recently used first."""
         return read(list[ThreadSummary], self._call("GET", "/threads"))
